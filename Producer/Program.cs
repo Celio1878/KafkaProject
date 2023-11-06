@@ -3,14 +3,14 @@ using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using deviocourse;
 
-var schemaConfig = new SchemaRegistryConfig
-{
-    Url = "http://localhost:8081"
-};
+string schemaRegistryUrl = Environment.GetEnvironmentVariable("SCHEMA_REGISTRY_URL") ?? "";
+string topic = Environment.GetEnvironmentVariable("TOPIC_NAME") ?? "";
+string bootstrapServer = Environment.GetEnvironmentVariable("BOOTSTRAP_SERVER") ?? "";
 
+var schemaConfig = new SchemaRegistryConfig { Url = schemaRegistryUrl };
 var schemaRegistry = new CachedSchemaRegistryClient(schemaConfig);
 
-var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
+var config = new ProducerConfig { BootstrapServers = bootstrapServer };
 
 var avroSerializer = new AvroSerializer<learning>(schemaRegistry);
 var producerBuilder = new ProducerBuilder<string, learning>(config);
@@ -28,7 +28,7 @@ Message<string, learning> message = new Message<string, learning>
     }
 };
 
-const string topicName = "deviocourse";
+string topicName = topic;
 var result = await producer.ProduceAsync(topicName, message);
 
 Console.WriteLine($"Message sent to topic {topicName} with offset {result.Offset}");

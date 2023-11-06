@@ -4,23 +4,24 @@ using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using deviocourse;
 
-var schemaConfig = new SchemaRegistryConfig
-{
-    Url = "http://localhost:8081"
-};
+string schemaRegistryUrl = Environment.GetEnvironmentVariable("SCHEMA_REGISTRY_URL") ?? "";
+string groupId = Environment.GetEnvironmentVariable("GROUP_ID") ?? "";
+string topic = Environment.GetEnvironmentVariable("TOPIC_NAME") ?? "";
+string bootstrapServer = Environment.GetEnvironmentVariable("BOOTSTRAP_SERVER") ?? "";
 
+var schemaConfig = new SchemaRegistryConfig { Url = schemaRegistryUrl };
 var schemaRegistry = new CachedSchemaRegistryClient(schemaConfig);
 
 var config = new ConsumerConfig
 {
-    GroupId = "devio",
-    BootstrapServers = "localhost:9092"
+    GroupId = groupId,
+    BootstrapServers = bootstrapServer
 };
 
 var deserializer = new AvroDeserializer<learning>(schemaRegistry).AsSyncOverAsync();
 using var consumer = new ConsumerBuilder<string, learning>(config).SetValueDeserializer(deserializer).Build();
 
-const string topicName = "deviocourse";
+string topicName = topic;
 consumer.Subscribe(topicName);
 
 var result = consumer.Consume();

@@ -1,6 +1,7 @@
 .idea
 .git
 .gitignore
+.env
 /*/deviocourse/
 /*/bin
 /*/obj
