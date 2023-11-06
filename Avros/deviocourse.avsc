@@ -1,0 +1,10 @@
+{
+    "namespace": "deviocourse",
+    "type": "record",
+    "name": "learning",
+    "fields": [
+        { "name": "id", "type": "string"},
+        { "name": "describe", "type": "string"},
+        { "name": "date", "type": "string"}
+    ]
+}
