@@ -1,0 +1,8 @@
+Consumer/deviocourse/
+Producer/deviocourse/
+Avros/deviocourse/
+.idea
+.bin
+.obj
+.git
+.gitignore
